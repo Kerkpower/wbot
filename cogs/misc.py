@@ -10,6 +10,11 @@ class Misc(commands.Cog):
     async def ping(self, ctx):
         await ctx.send('pong')
 
+    @commands.command()
+    @commands.cooldown(1, 15, commands.BucketType.user)
+    async def foo(self, ctx):
+        await ctx.send("bar")
+
 
 def setup(bot):  # this is called by Pycord to setup the cog
     bot.add_cog(Misc(bot))  # add the cog to the bot
