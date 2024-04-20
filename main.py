@@ -20,6 +20,7 @@ cogs = [
     "gamble",
     "admin",
     "account",
+    "society"
 ]
 
 for i in cogs:

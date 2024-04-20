@@ -1,5 +1,7 @@
 from discord.ext import commands
 
+import asyncio
+
 
 class Listeners(commands.Cog):
     def __init__(self, bot):  # this is a special method that is called when the cog is loaded
@@ -18,6 +20,13 @@ class Listeners(commands.Cog):
 
         else:
             print(error)
+
+    @commands.Cog.listener()
+    async def on_message(self, msg):
+        if msg.channel.id == 1231263378719379567:
+            await msg.add_reaction('🌌')
+            await asyncio.sleep(15)
+            await msg.delete()
 
 
 def setup(bot):  # this is called by Pycord to setup the cog
