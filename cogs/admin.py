@@ -9,6 +9,12 @@ class Admin(commands.Cog):
         if not user_id:
             user_id = ctx.message.author.id
 
+        elif user_id.startswith('<@') and user_id.endswith('>'):
+            # If the user_id is a mention, extract the user ID
+            user_id = user_id[2:-1]
+
+        user_id = int(user_id)
+
         dic = ctx.bot.db.get_user(user_id)
         ctx.bot.db.update_user(user_id, {"cash": dic["cash"] + money})
 

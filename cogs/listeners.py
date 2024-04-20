@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 
 
@@ -10,6 +9,12 @@ class Listeners(commands.Cog):
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(f'This command is on cooldown, you can use it in {round(error.retry_after, 2)}')
+
+        elif isinstance(error, commands.UserInputError):
+            await ctx.reply(error, mention_author=False)
+
+        elif isinstance(error, commands.NotOwner):
+            await ctx.reply(error, mention_author=False)
 
         else:
             print(error)
