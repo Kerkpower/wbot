@@ -69,6 +69,38 @@ class Currency(commands.Cog):
 
             await ctx.reply(f"Withdrew ${wit}", mention_author=False)
 
+    @commands.command()
+    @commands.is_owner()
+    async def stats(self, ctx, user: str = None):
+        if not user:
+            user = ctx.message.author.id
+
+        elif user.startswith('<@') and user.endswith('>'):
+            # If the user_id is a mention, extract the user ID
+            user = user[2:-1]
+
+        user = int(user)
+
+        dic = ctx.bot.db.get_user(user)
+
+        try:
+            if dic["prof_stock"]:
+                ...
+        except KeyError:
+            ctx.bot.db.update_user(user, {"prof_stock": 0, "stocks": 0})
+            dic = ctx.bot.db.get_user(user)
+
+        emb = discord.Embed(
+            title=f"{(await ctx.bot.fetch_user(user)).display_name}'s stats",
+            colour=ctx.bot.other.random_hex()
+        )
+        emb.add_field(name="Profit coinflip:", value=dic["prof_coin"], inline=False)
+        emb.add_field(name="Profit slots:", value=dic["prof_slots"], inline=False)
+        emb.add_field(name="Profit roulette:", value=dic["prof_roul"], inline=False)
+        emb.add_field(name="Profit stocks:", value=dic["prof_stock"], inline=False)
+        emb.set_footer(text=f"{ctx.message.author.display_name}", icon_url=ctx.author.avatar.url)
+        await ctx.reply(embed=emb, mention_author=False)
+
 
 def setup(bot):
     bot.add_cog(Currency(bot))

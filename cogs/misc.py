@@ -1,13 +1,12 @@
-from discord.ext import commands
-import discord
-
 import json
-
 import random
-
 from datetime import datetime
+from datetime import timezone
 from math import prod
 from typing import Union
+
+import discord
+from discord.ext import commands
 
 
 class Misc(commands.Cog):
@@ -27,7 +26,7 @@ class Misc(commands.Cog):
         if user is None:
             user = ctx.author
 
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
 
         if isinstance(user, str):
             seed = prod(ord(c) + i for i, c in enumerate(user)) * now.month * now.year

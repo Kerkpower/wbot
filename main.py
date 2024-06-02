@@ -8,6 +8,7 @@ env_vars = dotenv_values(".env")
 disc_token = env_vars.get("DISC_TOKEN")
 
 intents = discord.Intents.default()
+# noinspection PyDunderSlots
 intents.message_content = True
 bot = commands.Bot(command_prefix=';', intents=intents, help_command=commands.HelpCommand())
 
@@ -35,7 +36,7 @@ class SupremeHelpCommand(commands.DefaultHelpCommand):
     async def send_bot_help(self, mapping):
         embed = discord.Embed(title="Bot Help", color=discord.Color.blurple())
 
-        for cog, commands in mapping.items():
+        for cog, cmnds in mapping.items():
             filtered_commands = await self.filter_commands(commands, sort=True)
             if filtered_commands:
                 cog_name = cog.qualified_name if cog else "No Category"

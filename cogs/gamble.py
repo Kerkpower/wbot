@@ -61,7 +61,7 @@ class Gamble(commands.Cog):
                     a=random.choice(symbols), b=random.choice(symbols), c=random.choice(symbols),
                     d=random.choice(frst), e=random.choice(scnd), f=random.choice(thrd),
                     g=random.choice(symbols), h=random.choice(symbols), i=random.choice(symbols)) +
-                    f"\nYou won the jackpot! Money multiplied x5, you got ${-money + money * 5}")
+                                        f"\nYou won the jackpot! Money multiplied x5, you got ${-money + money * 5}")
                 dic = ctx.bot.db.get_user(ctx.message.author.id)
                 ctx.bot.db.update_user(ctx.message.author.id, {
                     "cash": dic["cash"] + money * 5,
@@ -74,7 +74,7 @@ class Gamble(commands.Cog):
                     a=random.choice(symbols), b=random.choice(symbols), c=random.choice(symbols),
                     d=random.choice(frst), e=random.choice(scnd), f=random.choice(thrd),
                     g=random.choice(symbols), h=random.choice(symbols), i=random.choice(symbols)) +
-                    f"\nYou got two in a row! Money multiplied x2, you got ${-money + money * 2}")
+                                        f"\nYou got two in a row! Money multiplied x2, you got ${-money + money * 2}")
 
                 dic = ctx.bot.db.get_user(ctx.message.author.id)
                 ctx.bot.db.update_user(ctx.message.author.id, {
@@ -94,33 +94,37 @@ class Gamble(commands.Cog):
                     "prof_slots": dic["prof_slots"] - money
                 })
 
-    @commands.command()
+    @commands.command(aliases=["coin"])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def coinflip(self, ctx, money: int):
+    async def coinflip(self, ctx, money: int or str):
         """50% chance of winning. Might as well, right?"""
         dic = ctx.bot.db.get_user(ctx.message.author.id)
         if money < 0 or money > 100:
             await ctx.reply("You can gamble between $1-100", mention_author=False)
+            return
 
-        elif dic["cash"] < money:
+        if dic["cash"] < money:
             await ctx.reply(f"You dont have ${money}", mention_author=False)
+            return
+
+        if money.lower() in ["max", "all"]:
+            money = 100
+
+        if random.randint(0, 1):
+            await ctx.reply(f"Heads! You won ${money}!", mention_author=False)
+            ctx.bot.db.get_user(ctx.message.author.id)
+            ctx.bot.db.update_user(ctx.message.author.id, {
+                "cash": dic["cash"] + money,
+                "prof_coin": dic["prof_coin"] + money
+            })
 
         else:
-            if random.randint(0, 1):
-                await ctx.reply(f"Heads! You won ${money}!", mention_author=False)
-                ctx.bot.db.get_user(ctx.message.author.id)
-                ctx.bot.db.update_user(ctx.message.author.id, {
-                    "cash": dic["cash"] + money,
-                    "prof_coin": dic["prof_coin"] + money
-                })
-
-            else:
-                await ctx.reply(f"Tails! You lost ${money}", mention_author=False)
-                ctx.bot.db.get_user(ctx.message.author.id)
-                ctx.bot.db.update_user(ctx.message.author.id, {
-                    "cash": dic["cash"] - money,
-                    "prof_coin": dic["prof_coin"] - money
-                })
+            await ctx.reply(f"Tails! You lost ${money}", mention_author=False)
+            ctx.bot.db.get_user(ctx.message.author.id)
+            ctx.bot.db.update_user(ctx.message.author.id, {
+                "cash": dic["cash"] - money,
+                "prof_coin": dic["prof_coin"] - money
+            })
 
     @commands.command(aliases=['rl'])
     @commands.cooldown(1, 6, commands.BucketType.user)

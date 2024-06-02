@@ -1,7 +1,7 @@
+import random
+
 import discord
 from discord.ext import commands
-
-import random
 
 
 class Society(commands.Cog):
@@ -26,7 +26,7 @@ class Society(commands.Cog):
         dic = ctx.bot.db.get_user(ctx.message.author.id)
         ctx.bot.db.update_user(ctx.message.author.id, {"cash": dic["cash"] + money})
 
-    @commands.command()
+    @commands.command(aliases=["stock"])
     async def stocks(self, ctx, user=None):
         """Check the balance of a user"""
         user_id = user
@@ -40,6 +40,13 @@ class Society(commands.Cog):
 
         dic = ctx.bot.db.get_user(int(user_id))
         global_var = ctx.bot.db.get_global()
+
+        try:
+            if dic["prof_stock"]:
+                ...
+        except KeyError:
+            ctx.bot.db.update_user(ctx.message.author.id, {"prof_stock": 0, "stocks": 0})
+            dic = ctx.bot.db.get_user(ctx.message.author.id)
 
         emb = discord.Embed(
             title=f"{(await ctx.bot.fetch_user(user_id)).display_name}'s balance",
@@ -60,7 +67,10 @@ class Society(commands.Cog):
         dic_user = ctx.bot.db.get_user(ctx.message.author.id)
         dic_global = ctx.bot.db.get_global()
 
-        if not dic_user["prof_stock"]:
+        try:
+            if dic_user["prof_stock"]:
+                ...
+        except KeyError:
             ctx.bot.db.update_user(ctx.message.author.id, {"prof_stock": 0, "stocks": 0})
             dic_user = ctx.bot.db.get_user(ctx.message.author.id)
 
@@ -98,6 +108,13 @@ class Society(commands.Cog):
 
         user_data = ctx.bot.db.get_user(ctx.message.author.id)
         global_data = ctx.bot.db.get_global()
+
+        try:
+            if user_data["prof_stock"]:
+                ...
+        except KeyError:
+            ctx.bot.db.update_user(ctx.message.author.id, {"prof_stock": 0, "stocks": 0})
+            user_data = ctx.bot.db.get_user(ctx.message.author.id)
 
         if amount > user_data["stocks"]:
             await ctx.reply("You don't have that many stocks", mention_author=False)

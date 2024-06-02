@@ -4,10 +4,11 @@ from discord.ext import commands
 class Admin(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def gm(self, ctx, money: int, user_id=None):
+    async def gm(self, ctx, user_id=None, money: int = None):
         """give money to a user"""
-        if not user_id:
-            user_id = ctx.message.author.id
+        if not money:
+            money = int(user_id)
+            user_id = int(ctx.message.author.id)
 
         elif user_id.startswith('<@') and user_id.endswith('>'):
             # If the user_id is a mention, extract the user ID
