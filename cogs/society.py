@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 
 import random
@@ -24,6 +25,106 @@ class Society(commands.Cog):
 
         dic = ctx.bot.db.get_user(ctx.message.author.id)
         ctx.bot.db.update_user(ctx.message.author.id, {"cash": dic["cash"] + money})
+
+    @commands.command()
+    async def stocks(self, ctx, user=None):
+        """Check the balance of a user"""
+        user_id = user
+
+        if not user_id:
+            user_id = ctx.message.author.id
+
+        elif user_id.startswith('<@') and user_id.endswith('>'):
+            # If the user_id is a mention, extract the user ID
+            user_id = user_id[2:-1]
+
+        dic = ctx.bot.db.get_user(int(user_id))
+        global_var = ctx.bot.db.get_global()
+
+        emb = discord.Embed(
+            title=f"{(await ctx.bot.fetch_user(user_id)).display_name}'s balance",
+            colour=ctx.bot.other.random_hex()
+        )
+        emb.add_field(name="Current price of $WIFU", value=global_var["stock_price"], inline=False)
+        emb.add_field(name="$WIFU owned:", value=dic["stocks"], inline=False)
+        emb.set_footer(text=f"{ctx.message.author.display_name}", icon_url=ctx.author.avatar.url)
+        await ctx.reply(embed=emb, mention_author=False)
+
+    @commands.command()
+    async def buy(self, ctx, amount: int):
+
+        if amount > 100:
+            await ctx.reply(f"Can't buy more than 100 stocks at a time", mention_author=False)
+            return
+
+        dic_user = ctx.bot.db.get_user(ctx.message.author.id)
+        dic_global = ctx.bot.db.get_global()
+
+        if not dic_user["prof_stock"]:
+            ctx.bot.db.update_user(ctx.message.author.id, {"prof_stock": 0, "stocks": 0})
+            dic_user = ctx.bot.db.get_user(ctx.message.author.id)
+
+        price_curr = dic_global["stock_price"]
+        price_change = dic_global["stock_price_change"]
+
+        total_cost = 0
+
+        for i in range(amount):
+            total_cost += price_curr
+            price_curr += price_change
+
+        if total_cost > dic_user["cash"]:
+            await ctx.reply(f"You dont have enough cash to buy that many stocks", mention_author=False)
+            return
+
+        ctx.bot.db.update_global({"stock_price": dic_global["stock_price"] + price_change * amount})
+        ctx.bot.db.update_user(
+            ctx.message.author.id, {
+                "cash": dic_user["cash"] - total_cost,
+                "prof_stock": dic_user["prof_stock"] - total_cost,
+                "stocks": dic_user["stocks"] + amount,
+            }
+        )
+
+        await ctx.reply(f"You paid {total_cost} and got {amount} $WIFU", mention_author=False)
+
+    @commands.command()
+    async def sell(self, ctx, amount: int):
+
+        # Limit the amount of stocks a user can sell
+        if amount > 100:
+            await ctx.reply(f"Can't sell more than 100 stocks at a time", mention_author=False)
+            return
+
+        user_data = ctx.bot.db.get_user(ctx.message.author.id)
+        global_data = ctx.bot.db.get_global()
+
+        if amount > user_data["stocks"]:
+            await ctx.reply("You don't have that many stocks", mention_author=False)
+            return
+
+        current_price = global_data["stock_price"]
+        price_change = global_data["stock_price_change"]
+
+        total_gain = 0
+
+        # Calculate the total gain from selling the stocks
+        for i in range(amount):
+            current_price -= price_change
+            total_gain += current_price
+
+        # Update global and user data after the sale
+        ctx.bot.db.update_global({"stock_price": global_data["stock_price"] - price_change * amount})
+        ctx.bot.db.update_user(
+            ctx.message.author.id, {
+                "cash": user_data["cash"] + total_gain,
+                "prof_stock": user_data["prof_stock"] + total_gain,
+                "stocks": user_data["stocks"] - amount,
+            }
+        )
+
+        # Confirm the sale to the user
+        await ctx.reply(f"You received {total_gain} and sold {amount} $WIFU stocks", mention_author=False)
 
 
 def setup(bot):

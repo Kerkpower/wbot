@@ -17,7 +17,7 @@ class Currency(commands.Cog):
 
         emb = discord.Embed(
             title=f"{(await ctx.bot.fetch_user(user_id)).display_name}'s balance",
-            colour=discord.Colour.random()
+            colour=ctx.bot.other.random_hex()
         )
         emb.add_field(name="Cash:", value=dic["cash"], inline=False)
         emb.add_field(name="Bank:", value=f"{dic['bank']}/{dic['bank_max']}", inline=False)

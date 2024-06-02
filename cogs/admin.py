@@ -18,6 +18,15 @@ class Admin(commands.Cog):
         dic = ctx.bot.db.get_user(user_id)
         ctx.bot.db.update_user(user_id, {"cash": dic["cash"] + money})
 
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def emergency(self, ctx):
+        print("Emergency exiting...")
+
+        await ctx.reply("Emergency exiting...")
+
+        exit()
+
 
 def setup(bot):
     bot.add_cog(Admin(bot))
