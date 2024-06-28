@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from dotenv import dotenv_values
 
+import random
+
 import utils
 
 env_vars = dotenv_values(".env")
@@ -86,6 +88,8 @@ bot.help_command = SupremeHelpCommand()
 @bot.event
 async def on_ready():
     print("bot is ready")
+    activity = random.choice([discord.Game("with the API")])
+    await bot.change_presence(status=discord.Status.online, activity=activity)
 
 
 bot.run(disc_token)

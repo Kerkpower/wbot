@@ -6,9 +6,10 @@ from dotenv import dotenv_values
 env_vars = dotenv_values(".env")
 mongo_user = env_vars.get("MONG_USER")
 mongo_pass = env_vars.get("MONG_PASSWORD")
+mongo_cluster = env_vars.get("MONG_HOSTNAME")
 
 client = pymongo.MongoClient(
-    f"mongodb+srv://{mongo_user}:{mongo_pass}@cluster0.naffa8p.mongodb.net/"
+    f"mongodb+srv://{mongo_user}:{mongo_pass}@{mongo_cluster}/"
 )
 db = client["db"]
 col = db["users"]
