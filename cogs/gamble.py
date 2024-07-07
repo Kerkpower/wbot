@@ -33,9 +33,9 @@ class Gamble(commands.Cog):
 
             tmpl = """You bet ${money} and...
     {a}\t|\t{b}\t|\t{c}
-    --------------------
+    ------------------------------
     {d}\t|\t{e}\t|\t{f}
-    --------------------
+    ------------------------------
     {g}\t|\t{h}\t|\t{i}"""
 
             mess = await ctx.send(tmpl.format(
@@ -107,10 +107,10 @@ class Gamble(commands.Cog):
             await ctx.reply(f"You dont have ${money}", mention_author=False)
             return
 
-        if money.lower() in ["max", "all"]:
+        if str(money).lower() in ["max", "all"]:
             money = 100
 
-        if random.randint(0, 1):
+        if random.getrandbits(1):
             await ctx.reply(f"Heads! You won ${money}!", mention_author=False)
             ctx.bot.db.get_user(ctx.message.author.id)
             ctx.bot.db.update_user(ctx.message.author.id, {
@@ -159,8 +159,7 @@ class Gamble(commands.Cog):
 
         shuffle_msg = await ctx.reply("Rolling: \n" + tmpl.format(
             a=symbols[0], b=symbols[1], c=symbols[2], d=symbols[0], e=symbols[1]
-        ),
-                                      mention_author=False)
+        ))
 
         x = ['🔴' if i % 2 else '⚫' for i in range(37)]
         x[-1] = '🟢'
@@ -197,7 +196,7 @@ class Gamble(commands.Cog):
                                                            })
 
         else:
-            await ctx.reply(f"you lost {money}$", mention_author=False)
+            await ctx.reply(f"it was {x[(place + 2) % 37]} and {place}\nyou lost {money}$", mention_author=False)
 
 
 def setup(bot):

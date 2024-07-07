@@ -27,7 +27,7 @@ class MongoDB:
             col.insert_one({
                 "_id": uid, "cash": 0, "bank": 0, "bank_max": 10_000,
                 "prof_coin": 0, "prof_slots": 0, "prof_roul": 0,
-                "prof_stock": 0, "stocks": 0,
+                "prof_stock": 0, "prof_bj": 0, "stocks": 0,
                 "inv": {
                 }
             })
@@ -38,6 +38,10 @@ class MongoDB:
         """update user in database"""
         user = MongoDB.get_user(uid)
         col.update_one(user, {"$set": updated})
+
+    @staticmethod
+    def update_all(field, value):
+        col.update_many({}, {"$set": {field: value}})
 
     @staticmethod
     def get_global():

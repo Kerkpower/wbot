@@ -28,6 +28,11 @@ class Admin(commands.Cog):
 
         exit()
 
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def add_field(self, ctx, field, value):
+        ctx.bot.db.update_all(field, value)
+
 
 def setup(bot):
     bot.add_cog(Admin(bot))
