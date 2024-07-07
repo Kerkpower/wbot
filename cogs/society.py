@@ -26,9 +26,8 @@ class Society(commands.Cog):
         dic = ctx.bot.db.get_user(ctx.message.author.id)
         ctx.bot.db.update_user(ctx.message.author.id, {"cash": dic["cash"] + money})
 
-    @commands.command(aliases=["stock"])
+    @commands.group(invoke_without_command=True)
     async def stocks(self, ctx, user=None):
-        """Check the balance of a user"""
         user_id = user
 
         if not user_id:
@@ -57,9 +56,8 @@ class Society(commands.Cog):
         emb.set_footer(text=f"{ctx.message.author.display_name}", icon_url=ctx.author.avatar.url)
         await ctx.reply(embed=emb, mention_author=False)
 
-    @commands.command()
+    @stocks.command()
     async def buy(self, ctx, amount: int):
-
         if amount > 100:
             await ctx.reply(f"Can't buy more than 100 stocks at a time", mention_author=False)
             return
@@ -98,7 +96,7 @@ class Society(commands.Cog):
 
         await ctx.reply(f"You paid {total_cost} and got {amount} $WIFU", mention_author=False)
 
-    @commands.command()
+    @stocks.command()
     async def sell(self, ctx, amount: int):
 
         # Limit the amount of stocks a user can sell

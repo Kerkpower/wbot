@@ -18,6 +18,9 @@ class Listeners(commands.Cog):
         elif isinstance(error, commands.NotOwner):
             await ctx.reply(error, mention_author=False)
 
+        elif isinstance(error, commands.CommandNotFound):
+            print(f"The user @{ctx.author.name} ({ctx.author.id}) tried to use the command `{ctx.message.content[1:]}`")
+
         else:
             print(error)
 

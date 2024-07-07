@@ -9,10 +9,8 @@ import utils
 env_vars = dotenv_values(".env")
 disc_token = env_vars.get("DISC_TOKEN")
 
-intents = discord.Intents.default()
-# noinspection PyDunderSlots
-intents.message_content = True
-bot = commands.Bot(command_prefix=';', intents=intents)
+
+bot = commands.Bot(command_prefix=';', intents=discord.Intents.all())
 
 bot.db = utils.MongoDB
 bot.other = utils.Others

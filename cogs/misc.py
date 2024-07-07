@@ -49,11 +49,6 @@ class Misc(commands.Cog):
             await ctx.reply(f"{name} is {gayness:.1%} gay.", mention_author=False)
         random.seed()
 
-    @commands.command()
-    @commands.is_owner()
-    async def foo(self, ctx):
-        ...
-
 
 def setup(bot):  # this is called by Pycord to setup the cog
     bot.add_cog(Misc(bot))  # add the cog to the bot
