@@ -1,7 +1,7 @@
-# SupremeBot README
+# WBot
 
 ## Overview
-WBot is a Discord bot built using the `py-cord` library. It has some gambling and economy commands for people to play with. 
+WBot is a Discord bot built using the `py-cord` library. It features various gambling and economy commands for users to enjoy.
 
 ## Installation and Setup
 
@@ -18,33 +18,39 @@ WBot is a Discord bot built using the `py-cord` library. It has some gambling an
     cd wbot
     ```
 
-2. **Install the Required Packages:**
+2. **Create and Activate a Python Virtual Environment:**
+   ```bash
+   python3 -m venv ./venv
+   source ./venv/bin/activate
+   ```
+
+3. **Install Required Packages:**
     ```bash
     pip install -r requirements.txt
     ```
 
-3. **Configure Environment Variables:**
-    Rename the `template.env` file to `.env` and configure appropriately:
+4. **Configure Environment Variables:**    
+    Rename the `template.env` file to `.env` and update the values:
     
-    ```ini
+    ```env
     DISC_TOKEN=your_discord_bot_token
     MONG_USER=your_mongo_username
     MONG_PASSWORD=your_mongo_password
     MONG_HOSTNAME=your_mongo_hostname
     ```
     
-    - `DISC_TOKEN`: the token for your bot that can be taken from the [Discord Developer Portal](https://discord.com/developers/applications)
-    - `MONG_USER`: the username of the MongoDB user
-    - `MONG_PASSWORD`: the password for the MongoDB user
-    - `MONG_HOSTNAME`: the hostname of your MongoDB server (everything after the @)
+    - `DISC_TOKEN`: Your bot token from the [Discord Developer Portal](https://discord.com/developers/applications)
+    - `MONG_USER`: The username for your MongoDB instance
+    - `MONG_PASSWORD`: The password for your MongoDB instance
+    - `MONG_HOSTNAME`: The hostname of your MongoDB server (everything after the @)
 
 ## Running the Bot
 To start the bot, execute the `main.py` file:
 
 ```bash
+# Ensure the virtual environment is activated
 python main.py
 ```
-
 
 ## License
 This project is licensed under the Apache 2.0 License. See the [LICENSE](LICENSE) file for details.
