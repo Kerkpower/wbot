@@ -144,7 +144,7 @@ class Society(commands.Cog):
         await ctx.reply(f"You received {total_gain} and sold {amount} $WIFU stocks", mention_author=False)
 
     @commands.command()
-    async def daily(self):
+    async def daily(self, ctx):
         user = ctx.bot.db.get_user(ctx.message.author.id)
         old_time = user["daily_last"]
         new_time = datetime.now()
