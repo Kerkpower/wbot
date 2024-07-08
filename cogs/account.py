@@ -97,7 +97,6 @@ class Currency(commands.Cog):
         emb.add_field(name="Profit coinflip:", value=dic["prof_coin"], inline=False)
         emb.add_field(name="Profit slots:", value=dic["prof_slots"], inline=False)
         emb.add_field(name="Profit roulette:", value=dic["prof_roul"], inline=False)
-        emb.add_field(name="Profit blackjack:", value=dic["prof_bj"], inline=False)
         emb.add_field(name="Profit stocks:", value=dic["prof_stock"], inline=False)
         emb.set_footer(text=f"{ctx.message.author.display_name}", icon_url=ctx.author.avatar.url)
         await ctx.reply(embed=emb, mention_author=False)

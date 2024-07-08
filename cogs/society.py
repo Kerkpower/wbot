@@ -162,7 +162,7 @@ class Society(commands.Cog):
             await ctx.reply(f"You got ${750 + 250 * user["daily_streak"]} from your daily", mention_author=False)
 
         else:
-            remaining_time = timedelta(hours=24) - diff
+            remaining_time = timedelta(hours=24) - old_time
             hours, remainder = divmod(remaining_time.total_seconds(), 3600)
             minutes = remainder // 60
 
