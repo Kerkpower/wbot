@@ -1,5 +1,7 @@
 import random
 
+from datetime import datetime
+
 import pymongo
 from dotenv import dotenv_values
 
@@ -25,9 +27,10 @@ class MongoDB:
             return var
         else:
             col.insert_one({
-                "_id": uid, "cash": 0, "bank": 0, "bank_max": 10_000,
+                "_id": uid, "cash": 10000, "bank": 0, "bank_max": 10_000,
                 "prof_coin": 0, "prof_slots": 0, "prof_roul": 0,
                 "prof_stock": 0, "prof_bj": 0, "stocks": 0,
+                "daily_streak": 0, "daily_last": datetime.now(),
                 "inv": {
                 }
             })

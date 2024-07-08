@@ -1,5 +1,7 @@
 import random
 
+from datetime import datetime, timedelta
+
 import discord
 from discord.ext import commands
 
@@ -11,7 +13,7 @@ class Society(commands.Cog):
         if luck := random.randint(1, 100) >= 90:
             money = random.randint(1000, 2000)
 
-            await ctx.reply(f"You do work your ass off and get {money}", mention_author=False)
+            await ctx.reply(f"You work your ass off and get {money}", mention_author=False)
 
         elif luck >= 50:
             money = random.randint(400, 900)
@@ -140,6 +142,36 @@ class Society(commands.Cog):
 
         # Confirm the sale to the user
         await ctx.reply(f"You received {total_gain} and sold {amount} $WIFU stocks", mention_author=False)
+
+    @commands.command()
+    async def daily(self):
+        user = ctx.bot.db.get_user(ctx.message.author.id)
+        old_time = user["daily_last"]
+        new_time = datetime.now()
+
+        diff = old_time - new_time
+
+        if diff > timedelta(hours=24):
+            ctx.bot.db.update_user(ctx.message.author.id,
+                                   {
+                                       "cash": user["cash"] + 750 + 250 * user["daily_streak"],
+                                       "daily_last": new_time,
+                                       "daily_streak": user["daily_streak"] + 1
+                                   })
+
+            await ctx.reply(f"You got ${750 + 250 * user["daily_streak"]} from your daily", mention_author=False)
+
+        else:
+            remaining_time = timedelta(hours=24) - diff
+            hours, remainder = divmod(remaining_time.total_seconds(), 3600)
+            minutes = remainder // 60
+
+            if hours >= 1:
+                await ctx.reply(f"You need to wait {int(hours)} hours before claiming your next daily",
+                                mention_author=False)
+            else:
+                await ctx.reply(f"You need to wait {int(minutes)} minutes before claiming your next daily",
+                                mention_author=False)
 
 
 def setup(bot):

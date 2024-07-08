@@ -131,9 +131,9 @@ class Gamble(commands.Cog):
     async def roulette(self, ctx, colour: typing.Literal["red", "black", "green"], money: int = 0):
         symbols = ["⚫", "🔴", "🟢"]
         tmpl = """
--------------------------------
+--------------------------------------------
 {a}\t{b}\t|\t{c}\t|\t{d}\t{e}
--------------------------------
+--------------------------------------------
 """
         dic = ctx.bot.db.get_user(ctx.message.author.id)
 
@@ -155,7 +155,9 @@ class Gamble(commands.Cog):
             colour = 2
 
         dic = ctx.bot.db.get_user(ctx.message.author.id)
-        ctx.bot.db.update_user(ctx.message.author.id, {"cash": dic["cash"] - money})
+        ctx.bot.db.update_user(ctx.message.author.id, {"cash": dic["cash"] - money,
+                                                       "prof_roul": dic["prof_roul"] - money
+                                                       })
 
         shuffle_msg = await ctx.reply("Rolling: \n" + tmpl.format(
             a=symbols[0], b=symbols[1], c=symbols[2], d=symbols[0], e=symbols[1]

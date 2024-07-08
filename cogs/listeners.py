@@ -10,7 +10,7 @@ class Listeners(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            await ctx.send(f'This command is on cooldown, you can use it in {round(error.retry_after, 2)}')
+            await ctx.send(f'This command is on cooldown, you can use it in {round(error.retry_after)/60} minutes')
 
         elif isinstance(error, commands.UserInputError):
             await ctx.reply(error, mention_author=False)
