@@ -126,9 +126,9 @@ class Gamble(commands.Cog):
                 "prof_coin": dic["prof_coin"] - money
             })
 
-    @commands.command(aliases=['rl'])
+    @commands.command(aliases=['rl'], usage="<colour> <money>")
     @commands.cooldown(1, 6, commands.BucketType.user)
-    async def roulette(self, ctx, colour: typing.Literal["red", "black", "green"], money: int = 0):
+    async def roulette(self, ctx, colour: typing.Literal["red", "black", "green"], money: int):
         symbols = ["⚫", "🔴", "🟢"]
         tmpl = """
 --------------------------------------------
@@ -136,6 +136,10 @@ class Gamble(commands.Cog):
 --------------------------------------------
 """
         dic = ctx.bot.db.get_user(ctx.message.author.id)
+
+        if not money:
+            await ctx.reply("You need to specify a bet amount")
+            return
 
         if money < 1_000:
             await ctx.reply("You need to bet at least 1000$")

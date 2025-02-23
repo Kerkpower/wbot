@@ -4,19 +4,19 @@ from discord.ext import commands
 
 class Currency(commands.Cog):
     @commands.command(aliases=["bal"])
-    async def balance(self, ctx, user_id=None):
+    async def balance(self, ctx, user=None):
         """Check the balance of a user"""
-        if not user_id:
-            user_id = ctx.message.author.id
+        if not user:
+            user = ctx.message.author.id
 
-        elif user_id.startswith('<@') and user_id.endswith('>'):
-            # If the user_id is a mention, extract the user ID
-            user_id = user_id[2:-1]
+        elif user.startswith('<@') and user.endswith('>'):
+            # If the user is a mention, extract the user ID
+            user = user[2:-1]
 
-        dic = ctx.bot.db.get_user(int(user_id))
+        dic = ctx.bot.db.get_user(int(user))
 
         emb = discord.Embed(
-            title=f"{(await ctx.bot.fetch_user(user_id)).display_name}'s balance",
+            title=f"{(await ctx.bot.fetch_user(user)).display_name}'s balance",
             colour=ctx.bot.other.random_hex()
         )
         emb.add_field(name="Cash:", value=dic["cash"], inline=False)
@@ -76,7 +76,7 @@ class Currency(commands.Cog):
             user = ctx.message.author.id
 
         elif user.startswith('<@') and user.endswith('>'):
-            # If the user_id is a mention, extract the user ID
+            # If the user is a mention, extract the user ID
             user = user[2:-1]
 
         user = int(user)
@@ -92,7 +92,7 @@ class Currency(commands.Cog):
 
         emb = discord.Embed(
             title=f"{(await ctx.bot.fetch_user(user)).display_name}'s stats",
-            colour=ctx.bot.other.random_hex()   
+            colour=ctx.bot.other.random_hex()
         )
         emb.add_field(name="Profit coinflip:", value=dic["prof_coin"], inline=False)
         emb.add_field(name="Profit slots:", value=dic["prof_slots"], inline=False)
